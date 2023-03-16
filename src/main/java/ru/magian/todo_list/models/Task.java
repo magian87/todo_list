@@ -1,25 +1,37 @@
 package ru.magian.todo_list.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import org.springframework.stereotype.Controller;
 import ru.magian.todo_list.enam.Status;
+
+import javax.persistence.*;
 
 /*@NoArgsConstructor
 @Getter
 @Setter
 @AllArgsConstructor*/
 
+@Entity
+@Table(name="Task")
 public class Task {
 
+    @Id
+    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name="description")
     private String description;
 
+    @Column
     private int status;
 
     public Task() {
+    }
+
+    public Task(String description, int status) {
+        this.description = description;
+        this.status = status;
     }
 
     public long getId() {

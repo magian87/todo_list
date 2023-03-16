@@ -1,39 +1,47 @@
 package ru.magian.todo_list.dao;
 
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.magian.todo_list.models.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 
 @Component
 public class TaskDao {
-    private final JdbcTemplate jdbcTemplate;
+    private final SessionFactory sessionFactory;
+
 
     @Autowired
-    public TaskDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public TaskDao(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
-    public List<Task> getAll(){
-      return jdbcTemplate.query("select * from task order by description", new BeanPropertyRowMapper<>(Task.class));
+    @Transactional(readOnly = true)
+    public List<Task> getAll() {
+        Session session = sessionFactory.getCurrentSession();
+
+        return session.createQuery("select t from Task t", Task.class)
+                .getResultList();
+
     }
 
-    public Optional<Task> get (long id){
-        return jdbcTemplate.query("select * from task p where id = ? ",
-                        new Object[]{id},
-                        //new PersonMapper())
-                        new BeanPropertyRowMapper<>(Task.class))
-                .stream().findAny();
+    @Transactional(readOnly = true)
+    public Task get(long id) {
+        Session session = sessionFactory.getCurrentSession();
+        return  session.get(Task.class, id);
     }
 
-    public void save(Task task){
-        jdbcTemplate.update("insert into Task (description, status) values (?,?)",
-                task.getDescription(), task.getStatus());
+    @Transactional
+    public void save(Task task) {
+        Session session = sessionFactory.getCurrentSession();
+        session.save(task);
     }
 
     //:TODO Исправить реализацию public void update(Task task, String[] params)
@@ -50,19 +58,21 @@ public class TaskDao {
     }
     * */
 
-    public void update(int id, Task updateTask){
-        jdbcTemplate.update("Update task set description = ?, status = ? where id = ?",
-                updateTask.getDescription(), updateTask.getStatus(),
-                id);
+    @Transactional
+    public void update(long id, Task updateTask) {
+        Session session = sessionFactory.getCurrentSession();
+        Task task = session.get(Task.class, id);
+        task.setDescription(updateTask.getDescription());
+        task.setStatus(updateTask.getStatus());
+        //session.update(task);
     }
 
     //:TODO исправить реализацию на void delete(T t);
-    public void delete(int id) {
-
-        jdbcTemplate.update("delete from task where id = ?", id);
+    @Transactional
+    public void delete(long id) {
+        Session session = sessionFactory.getCurrentSession();
+        session.remove(session.get(Task.class, id));
     }
-
-
 
 
 }

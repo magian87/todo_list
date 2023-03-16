@@ -1,13 +1,12 @@
 package ru.magian.todo_list.config;
 
+
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+
+import javax.servlet.*;
 import java.util.EnumSet;
 
 public class MySpringMvcDispatcherServletInitialaizer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -28,7 +27,7 @@ public class MySpringMvcDispatcherServletInitialaizer extends AbstractAnnotation
 
     @Override
     public void onStartup(ServletContext aServletContext) throws ServletException {
-        super.onStartup(aServletContext);
+        super.onStartup (aServletContext);
         registerCharacterEncodingFilter(aServletContext);
         registerHiddenFieldFilter(aServletContext);
 
@@ -36,7 +35,7 @@ public class MySpringMvcDispatcherServletInitialaizer extends AbstractAnnotation
 
     private void registerHiddenFieldFilter(ServletContext aContext) {
         aContext.addFilter("hiddenHttpMethodFilter",
-                new HiddenHttpMethodFilter()).addMappingForUrlPatterns(null ,true, "/*");
+                (Filter) new HiddenHttpMethodFilter()).addMappingForUrlPatterns(null ,true, "/*");
     }
 
     private void registerCharacterEncodingFilter(ServletContext aContext) {

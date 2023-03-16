@@ -8,16 +8,17 @@ import org.springframework.web.bind.annotation.*;
 import ru.magian.todo_list.dao.TaskDao;
 import ru.magian.todo_list.models.Task;
 
-import javax.validation.Valid;
+
 
 @Controller
-@RequestMapping("tasks")
+@RequestMapping("/tasks")
 public class TaskController {
     private final TaskDao taskDao;
 
 
     @Autowired
     public TaskController(TaskDao taskDao) {
+
         this.taskDao = taskDao;
     }
 
@@ -31,7 +32,7 @@ public class TaskController {
     //read one
     @GetMapping("/{id}")
     public String show(@PathVariable("id") long id, Model model){
-        model.addAttribute("task", taskDao.get(id).orElse(null));
+        model.addAttribute("task", taskDao.get(id));
         return "tasks/show";
     }
 
@@ -44,31 +45,20 @@ public class TaskController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute("task") Task task
-                         /*BindingResult bindingResult*/){
-        /*personValidator.validate(person, bindingResult);
-        if (bindingResult.hasErrors())
-            return "people/new";*/
-
+    public String create(@ModelAttribute("task") Task task){
         taskDao.save(task);
-
         return "redirect:/tasks";
     }
 
     @GetMapping("{id}/edit")
     public String edit(Model model, @PathVariable("id") int id){
-        model.addAttribute("task", taskDao.get(id).orElse(null));
+        model.addAttribute("task", taskDao.get(id));
         return "tasks/edit";
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("task") @Valid  Task task,
-                         @PathVariable("id") int id,
-                         BindingResult bindingResult){
-        /*personValidator.validate(person, bindingResult);
-        if (bindingResult.hasErrors())
-            return "people/edit";
-*/
+    public String update(@ModelAttribute("task") Task task,
+                         @PathVariable("id") int id){
         taskDao.update(id, task);
         return "redirect:/tasks";
     }
