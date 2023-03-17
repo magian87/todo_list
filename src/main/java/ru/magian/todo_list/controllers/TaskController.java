@@ -22,9 +22,6 @@ public class TaskController {
     }
 
 
-   /* @GetMapping("/pagination/{offset}/{pageSize}")
-     public String */
-
     @GetMapping("/page/{pageNum}")
     public String viewPage(Model model,
                            @PathVariable(name = "pageNum") int pageNum){
@@ -34,9 +31,8 @@ public class TaskController {
 
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
+  //      model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("tasks", tasks);
-
 
         return "tasks/index";
 
