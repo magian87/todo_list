@@ -1,9 +1,6 @@
 package ru.magian.todo_list.models;
 
 
-import org.springframework.stereotype.Controller;
-import ru.magian.todo_list.enam.Status;
-
 import javax.persistence.*;
 
 /*@NoArgsConstructor
@@ -23,13 +20,14 @@ public class Task {
     @Column(name="description")
     private String description;
 
-    @Column
-    private int status;
+    //@Column
+    @Enumerated(EnumType.ORDINAL)
+    private Status status;
 
     public Task() {
     }
 
-    public Task(String description, int status) {
+    public Task(String description, Status status) {
         this.description = description;
         this.status = status;
     }
@@ -50,11 +48,11 @@ public class Task {
         this.description = description;
     }
 
-    public int getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

@@ -1,4 +1,4 @@
-package ru.magian.todo_list.enam;
+package ru.magian.todo_list.models;
 
 public enum Status {
     IN_PROGRESS,

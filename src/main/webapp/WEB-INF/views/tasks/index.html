@@ -41,15 +41,28 @@
     </tr>
 </table>
 
-
-<!--<div th:each="task: ${tasks}">
-    <a th:href="@{/tasks/{id}(id=${task.getId()})}"
-       th:text="${'Description:'+ task.getDescription() +', Status:'+ task.getStatus }">task</a>
-</div>-->
-
 <br>
-
+<hr>
 <a href="/tasks/new">Создать задачу</a>
+<hr>
+
+
+новый
+<!--<p th:each="i: ${#numbers.sequence(1,totalPages)}">
+    <span th:text="${i}"></span>&ndash;&gt;
+</p>-->
+
+
+<hr>
+
+<h3>
+    Пагинация
+<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+    <a th:if="${currentPage != i}" th:href="@{'/tasks/page/' + ${i}}">[[${i}]]</a>
+    <span th:unless="${currentPage != i}">[[${i}]]</span>
+</span>
+</h3>
+
 
 </body>
 </html>

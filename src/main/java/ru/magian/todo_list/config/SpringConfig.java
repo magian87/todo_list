@@ -8,10 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -28,9 +32,9 @@ import java.util.Properties;
 @Configuration
 @ComponentScan("ru.magian.todo_list")
 @EnableWebMvc
-//@PropertySource("classpath:database.properties")
 @PropertySource("classpath:hibernate.properties")
 @EnableTransactionManagement
+@EnableJpaRepositories("ru.magian.todo_list.repositories")
 public class SpringConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
@@ -71,27 +75,17 @@ public class SpringConfig implements WebMvcConfigurer {
         registry.viewResolver(resolver);
     }
 
-    /*@Bean
-    public DataSource dataSource(){
-        DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-        driverManagerDataSource.setDriverClassName(Objects.requireNonNull(environment.getProperty("driver")));
-        driverManagerDataSource.setUrl(environment.getProperty("url"));
-        driverManagerDataSource.setUsername(environment.getProperty("username_"));
-        driverManagerDataSource.setPassword(environment.getProperty("password"));
-        return driverManagerDataSource;
-    }*/
-
     @Bean
     public DataSource dataSource(){
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
 
-        //driverManagerDataSource.setDriverClassName(Objects.requireNonNull(environment.getProperty("hibernate.driver_class")));
-        dataSource.setDriverClassName(environment.getRequiredProperty("hibernate.driver_class"));
-        dataSource.setUrl(environment.getProperty("hibernate.connection.url"));
-        dataSource.setUsername(environment.getProperty("hibernate.connection.username"));
-        dataSource.setPassword(environment.getProperty("hibernate.connection.password"));
+        driverManagerDataSource.setDriverClassName(Objects.requireNonNull(environment.getProperty("hibernate.driver_class")));
+        //dataSource.setDriverClassName(environment.getRequiredProperty("hibernate.driver_class"));
+        driverManagerDataSource.setUrl(environment.getProperty("hibernate.connection.url"));
+        driverManagerDataSource.setUsername(environment.getProperty("hibernate.connection.username"));
+        driverManagerDataSource.setPassword(environment.getProperty("hibernate.connection.password"));
 
-        return dataSource;
+        return driverManagerDataSource;
     }
 
     /*@Bean
@@ -109,7 +103,7 @@ public class SpringConfig implements WebMvcConfigurer {
         return properties;
     }
 
-    @Bean
+/*    @Bean
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
@@ -117,12 +111,35 @@ public class SpringConfig implements WebMvcConfigurer {
         sessionFactory.setHibernateProperties(hibernateProperties());
 
         return sessionFactory;
-    }
+    }*/
 
     @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
+        em.setPackagesToScan("ru.magian.todo_list.models");
+
+        final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        em.setJpaVendorAdapter(vendorAdapter);
+        em.setJpaProperties(hibernateProperties());
+
+        return em;
+    }
+
+
+
+    /*@Bean
     public PlatformTransactionManager hibernateTransactionManager() {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory().getObject());
+
+        return transactionManager;
+    }*/
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 
         return transactionManager;
     }

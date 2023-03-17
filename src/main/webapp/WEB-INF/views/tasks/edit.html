@@ -12,8 +12,15 @@
     <!--<div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error  </div>-->
 
     <br>
-    <label for="status">Enter status:</label>
-    <input type="text" th:field="*{status}" id="status"/>
+    <!--<label for="status">Enter status:</label>
+    <input type="text" th:field="*{status}" id="status"/>-->
+
+    <label for="status">Выберите статус:</label>
+    <select name="status" th:field="*{status}" id="status">
+        <option th:each="statusOpt : ${T(ru.magian.todo_list.models.Status).values()}"
+                th:value="${statusOpt}" th:text="${statusOpt}"></option>
+    </select>
+
     <!--<div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age error  </div>-->
 
 
