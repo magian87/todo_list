@@ -3,11 +3,6 @@ package ru.magian.todo_list.models;
 
 import javax.persistence.*;
 
-/*@NoArgsConstructor
-@Getter
-@Setter
-@AllArgsConstructor*/
-
 @Entity
 @Table(name="Task")
 public class Task {
@@ -20,7 +15,6 @@ public class Task {
     @Column(name="description")
     private String description;
 
-    //@Column
     @Enumerated(EnumType.ORDINAL)
     private Status status;
 

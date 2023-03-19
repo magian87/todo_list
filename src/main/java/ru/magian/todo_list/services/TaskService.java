@@ -28,15 +28,9 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-  /*  public Page<Task> findByPage(Pageable pageable) {
-        return taskRepository.findAll(pageable);
-    }*/
-
-    //public Page<Task> findTaskWithPagination(int offset, int pageSize){
     public Page<Task> findTaskWithPagination(int pageNum){
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNum-1, pageSize);
-        //Page<Task> taskPage = taskRepository.findAll(PageRequest.of(offset, pageSize));
         return taskRepository.findAll(pageable);
     }
 

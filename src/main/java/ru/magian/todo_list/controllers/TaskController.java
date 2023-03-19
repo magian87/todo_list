@@ -31,7 +31,6 @@ public class TaskController {
 
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("totalPages", page.getTotalPages());
-  //      model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("tasks", tasks);
 
         return "tasks/index";
@@ -40,10 +39,11 @@ public class TaskController {
 
 
 
-    //read all
+    //read by page
     @GetMapping
     public String index(Model model){
         return viewPage(model, 1);
+        //Оставил для себя
         //model.addAttribute("tasks", taskService.findAll());
         //return "tasks/index";
     }
@@ -68,6 +68,7 @@ public class TaskController {
         taskService.save(task);
         return "redirect:/tasks";
     }
+
 
     @GetMapping("{id}/edit")
     public String edit(Model model, @PathVariable("id") long id){
