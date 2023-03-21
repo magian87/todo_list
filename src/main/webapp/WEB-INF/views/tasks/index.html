@@ -17,8 +17,11 @@
 
 <table class="table table-striped">
     <tr>
-        <th>Description</th>
-        <th>Status</th>
+        <th>Описание</th>
+        <th>Статус задачи</th>
+        <th>Редактирование</th>
+        <th>Удаление</th>
+
     </tr>
 
     <tr th:each="task : ${tasks}">
@@ -43,7 +46,7 @@
 
 <br>
 <hr>
-<a href="/tasks/new">Создать задачу</a>
+<a href="/tasks/new" class="btn btn-primary" >Создать задачу</a>
 <hr>
 
 

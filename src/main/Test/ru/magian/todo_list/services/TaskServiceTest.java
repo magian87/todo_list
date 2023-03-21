@@ -98,7 +98,7 @@ class TaskServiceTest {
         taskService.delete(10L);
         verify(taskRepository, times(1)).deleteById(10L);
 
-        //when(taskRepository.findById(10L)).thenReturn(Optional.empty());
+        when(taskRepository.findById(10L)).thenReturn(Optional.empty());
 
         assertNull(taskService.findOne(10L));
     }
