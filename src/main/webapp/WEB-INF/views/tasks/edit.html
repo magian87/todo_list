@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update person</title>
+</head>
+<body>
+
+<form th:method="patch" th:action="@{/tasks/{id}(id=${task.getId()})}" th:object="${task}">
+    <label for="description">Введите описание задачи:</label>
+    <input type="text" th:field="*{description}" id="description"/>
+    <!--<div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error  </div>-->
+
+    <br>
+    <!--<label for="status">Enter status:</label>
+    <input type="text" th:field="*{status}" id="status"/>-->
+
+    <label for="status">Выберите статус:</label>
+    <select name="status" th:field="*{status}" id="status">
+        <option th:each="statusOpt : ${T(ru.magian.todo_list.models.Status).values()}"
+                th:value="${statusOpt}" th:text="${statusOpt}"></option>
+    </select>
+
+    <!--<div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age error  </div>-->
+
+
+    <br>
+    <input type="submit" value="Обновить!"/>
+
+</form>
+
+</body>
+</html>
